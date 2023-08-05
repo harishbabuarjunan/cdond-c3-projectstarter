@@ -212,7 +212,6 @@ jobs:
           name: Install dependencies
           command: |
             sudo apt install -y tar gzip curl
-            sudo apt-get update
       - run:
           name: Install AWS CLI v2
           command: |
