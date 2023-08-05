@@ -155,7 +155,7 @@ jobs:
 
   run-migrations:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: circleci/node:14.18.1
     steps:
       - checkout
       - run:
@@ -174,10 +174,22 @@ jobs:
             node --version
             npm --version
       - run:
+          name: Install AWS CLI dependencies
+          working_directory: /tmp
+          command: |
+            sudo apt-get update && sudo apt-get install -yy less
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+      - run:
           name: Run migrations
           command: |
             cd backend
             npm install
+            npm audit fix --audit-level=critical --force
+            npm audit fix --force
+            npm audit --audit-level=critical
+            npm audit fix
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
       - run:
