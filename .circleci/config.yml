@@ -285,23 +285,14 @@ jobs:
 
   deploy-backend:
     docker:
-      # Docker image here that supports Ansible
-      - image: python:3.7-alpine3.11
+      - image: python:3.7-alpine3.16
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints: ["93:10:8c:8e:43:dc:a4:93:f1:53:cd:66:83:89:36:b8"]
-      - attach_workspace:
-          at: ~/
       - run:
           name: Install dependencies
           command: |
-            # Your code here
-            apk update
-            apk upgrade
-            apk add unzip 
-            apk add curl
-            /usr/local/bin/python -m pip install --upgrade pip
+            apk add --update  tar gzip npm  curl 
+            pip install awscli
       - run:
           name: Install node
           command: |
@@ -319,7 +310,10 @@ jobs:
             # your code here                           
             pip install awscli --upgrade   
             aws --version
-
+      - add_ssh_keys:
+          fingerprints: ["93:10:8c:8e:43:dc:a4:93:f1:53:cd:66:83:89:36:b8"]
+      - attach_workspace:
+          at: ~/
       - run:
           name: Deploy backend
           command: |
@@ -365,4 +359,6 @@ workflows:
       - run-migrations:
           requires: [configure-infrastructure]
       - deploy-frontend:
+          requires: [run-migrations]
+      - deploy-backend:
           requires: [run-migrations]
