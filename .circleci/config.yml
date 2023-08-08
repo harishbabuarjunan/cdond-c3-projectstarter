@@ -291,12 +291,12 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update  tar gzip npm  curl 
+            apk add --update  tar gzip  curl 
             pip install awscli
       - run:
           name: Install node
           command: |
-            apk add --update nodejs nodejs-npm
+            apk add --update nodejs npm
             node --version
             npm --version
       - run:
@@ -361,4 +361,4 @@ workflows:
       - deploy-frontend:
           requires: [run-migrations]
       - deploy-backend:
-          requires: [run-migrations]
+          requires: [run-migrations, deploy-frontend]
