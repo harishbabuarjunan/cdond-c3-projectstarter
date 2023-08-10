@@ -397,47 +397,6 @@ jobs:
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
-  cloudfront-update:
-    docker:
-      - image: python:3.7-alpine3.16
-    steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: |
-            apk add --update  tar gzip  curl 
-            pip install awscli
-      - run:
-          name: Install node
-          command: |
-            apk add --update nodejs npm
-            node --version
-            npm --version
-       - run:
-          name: Install aws
-          command: |
-            # your code here                           
-            pip install awscli --upgrade   
-            aws --version
-      - run:
-          name: Update cloudfront distribution
-          command: |
-            export OLD_WORKFLOW_ID=$(aws cloudformation \
-            list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-            --no-paginate --output text)
-            echo "*** Old Wokflow ID: $OLD_WORKFLOW_ID"
-
-            echo "New stack"
-            aws cloudformation deploy \
-            --template-file .circleci/files/cloudfront.yml \
-            --stack-name InitialStack \
-            --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
-            --tags project=udapeople
-
-            echo "*** New Wokflow ID: $WORKFLOW_ID"
-      # Here's where you will add some code to rollback on failure
-      - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 workflows:
   default:
     jobs:
@@ -466,4 +425,3 @@ workflows:
           requires: [run-migrations]
       - smoke-test:
           requires: [deploy-backend, deploy-frontend]
-      
