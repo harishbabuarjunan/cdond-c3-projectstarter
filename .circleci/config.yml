@@ -467,14 +467,15 @@ jobs:
 
             echo Old Workflow ID: $OldWorkflowID 
 
-            if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+            if [[ "${STACKS[@]}" =~  "udapeople-backend-${OldWorkflowID:10:17}" ]]
             then
-              echo  Old Workflow ID: $OldWorkflowID 
-              #aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
-              #aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
-              #aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+              echo  "--- clean up completed-----"
+              echo ${OldWorkflowID:10:17}
+              aws s3 rm "s3://${OldWorkflowID}" --recursive
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID:10:17}"
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID:10:17}"
             else 
-              echo "else clean up "
+              echo "Nothing to clean up "
             fi
 workflows:
   default:
