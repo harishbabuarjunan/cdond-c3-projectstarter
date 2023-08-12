@@ -137,11 +137,21 @@ jobs:
       - run:
           name: Ensure back-end infrastructure exists
           command: |
-            aws cloudformation deploy --template-file .circleci/files/backend.yml  --stack-name  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"  --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+            aws cloudformation deploy \
+            --template-file .circleci/files/backend.yml \
+            --stack-name  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+            --tags project=udapeople \
+            --region us-east-1
       - run:
           name: Ensure front-end infrastructure exist
           command: |
-            aws cloudformation deploy --template-file .circleci/files/frontend.yml --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+            aws cloudformation deploy \
+            --template-file .circleci/files/frontend.yml \
+            --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+            --tags project=udapeople \
+            --region us-east-1
       - run:
           name: Add back-end ip to ansible inventory
           command: |
@@ -427,7 +437,7 @@ jobs:
             --template-file .circleci/files/cloudfront.yml \
             --stack-name InitialStack \
             --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
-
+            --tags project=udapeople
             echo "*** New Wokflow ID: ${CIRCLE_WORKFLOW_ID}"
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
