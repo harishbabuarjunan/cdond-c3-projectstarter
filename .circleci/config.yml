@@ -30,26 +30,16 @@ commands:
             # Example: kvdb.io
             export SUCCESS=$(curl --insecure  https://kvdb.io/Mggxw1ssaTdeY5i5THbJDW/migration_<<parameters.workflow_id>>)
             # Logic for reverting the database state
-            echo $SUCCESS
-
+            echo "success value :  $SUCCESS"
+            echo  $SUCCESS
             if [[ $SUCCESS == 1 ]]; 
             then
+              echo "Reverting Migrations "
               cd ~/project/backend
               npm install
-              npm audit fix --audit-level=critical --force
-              npm audit fix --force
-
-              echo "Reverting Migrations "
               npm run migrations:revert
             else 
-              echo " Migrations to revert.."
-              cd ~/project/backend
-              npm install
-              npm audit fix --audit-level=critical --force
-              npm audit fix --force
-
-              echo "Reverting Migrations "
-              npm run migrations:revert
+              echo " Revert Migration Completed"
             fi
 
 jobs:
