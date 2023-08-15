@@ -37,7 +37,11 @@ commands:
               echo "Reverting Migrations "
               npm run migration:revert
             else 
-              echo "No Migrations to revert"
+              echo " Migrations to revert.."
+              cd ~/project/backend
+              npm install
+              echo "Reverting Migrations "
+              npm run migration:revert
             fi
 
 jobs:
