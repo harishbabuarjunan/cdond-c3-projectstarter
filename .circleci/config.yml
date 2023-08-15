@@ -52,9 +52,22 @@ jobs:
       - run:
           name: Install npm and Run build
           command: |
-            cd frontend
-            npm install
-            npm run build
+            #cd frontend
+            #npm install
+            #npm run build
+            echo "test"
+            export  SUCCESS=$(curl --insecure  https://kvdb.io/Mggxw1ssaTdeY5i5THbJDW/migration_4410563)
+            # Logic for reverting the database state
+            echo $SUCCESS
+            if [ $SUCCESS == 1 ]; 
+            then
+              cd ~/project/backend
+              npm install
+              echo "Reverting Migrations "
+              npm run migration:revert
+            else 
+              echo "No Migrations to revert"
+            fi
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -488,4 +501,4 @@ jobs:
 workflows:
   default:
     jobs:
-      - revert-migrations
+      - build-frontend
